@@ -1,20 +1,20 @@
+import os
 import streamlit as st
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 import torch
 
-# Cargar modelo y tokenizer desde tus archivos locales
 @st.cache_resource
 def load_classifier():
-    model_path = "ruta/a/tu/modelo"  # <-- CAMBIA AQUÍ: pon la ruta donde tengas config.json y pytorch_model.bin
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForSequenceClassification.from_pretrained(model_path)
+    # Asegúrate de usar ruta local RELATIVA
+    model_path = os.path.join(os.getcwd(), "mi_modelo")  # <-- cambia "mi_modelo" por el nombre real de tu carpeta
+    tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path, local_files_only=True)
     device = 0 if torch.cuda.is_available() else -1
     return pipeline("text-classification", model=model, tokenizer=tokenizer, device=device)
 
-# Cargar el clasificador
 classifier = load_classifier()
 
-# Streamlit App
+# Tu Streamlit App
 st.title("Clasificación de Emociones en Español")
 
 input_text = st.text_area("Escribe una frase:")
@@ -27,3 +27,4 @@ if st.button("Predecir emoción"):
         st.success(f"**Emoción detectada:** {emotion} ({score}% de confianza)")
     else:
         st.warning("Por favor escribe un texto para analizar.")
+
