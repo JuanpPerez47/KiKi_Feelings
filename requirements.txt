@@ -3,5 +3,3 @@ transformers==4.51.3
 torch==2.6.0
 pandas==2.2.2
 numpy==2.0.2
-SpeechRecognition==3.8.1
-pyaudio
